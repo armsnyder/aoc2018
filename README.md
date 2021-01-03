@@ -24,8 +24,10 @@ $ go test -bench=.
 goos: darwin
 goarch: amd64
 pkg: github.com/armsnyder/aoc2018
-Benchmark/Day_04/Part_1-16          2379            447879 ns/op          145463 B/op       1095 allocs/op
-Benchmark/Day_04/Part_2-16          2456            454367 ns/op          145461 B/op       1095 allocs/op
+Benchmark/Day_04/Part_1-16          2361            457102 ns/op          145465 B/op       1095 allocs/op
+Benchmark/Day_04/Part_2-16          2539            458153 ns/op          145462 B/op       1095 allocs/op
+Benchmark/Day_05/Part_1-16          5559            215441 ns/op          177536 B/op         25 allocs/op
+Benchmark/Day_05/Part_2-16           223           5387807 ns/op          177536 B/op         25 allocs/op
 PASS
-ok      github.com/armsnyder/aoc2018    2.410s
+ok      github.com/armsnyder/aoc2018    5.434s
 ```
