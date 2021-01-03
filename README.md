@@ -6,7 +6,7 @@ abandoned this calendar early when I was doing it originally.
 Usage:
 
 ```
-$ go run . [-d day] [-2]
+$ go run . [day] [-2]
 ```
 
 Requires a `session.txt` file containing a session token, for pulling puzzle input and submitting answers.

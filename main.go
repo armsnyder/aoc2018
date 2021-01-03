@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/armsnyder/aoc2018/aocutil"
@@ -31,11 +32,19 @@ func main() {
 		skipSubmit bool
 		inputFile  string
 	)
-	flag.IntVar(&day, "d", time.Now().In(easternTime).Day(), "Day of the month")
 	flag.BoolVar(&part2, "2", false, "Run part 2")
 	flag.BoolVar(&skipSubmit, "s", false, "Skip submitting the answer")
 	flag.StringVar(&inputFile, "f", "", "Puzzle input override filepath")
 	flag.Parse()
+	day, err = strconv.Atoi(flag.Arg(0))
+	if err != nil {
+		now := time.Now()
+		if now.Month() == 12 {
+			day = now.In(easternTime).Day()
+		} else {
+			panic(fmt.Errorf("Could not parse positional argument: day: %w", err))
+		}
+	}
 
 	dayFn, ok := days[day]
 	if !ok {
