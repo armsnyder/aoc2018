@@ -41,7 +41,6 @@ func main() {
 	if !ok {
 		fmt.Printf("Generating a stub for day %d\n", day)
 		aocutil.GenerateStub(day)
-		return
 	}
 
 	var input io.ReadCloser
@@ -55,6 +54,10 @@ func main() {
 		input = aocutil.GetInput(day)
 	}
 	defer input.Close()
+
+	if !ok {
+		return
+	}
 
 	start := time.Now()
 	output := dayFn(part2, input)
