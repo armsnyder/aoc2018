@@ -1,6 +1,7 @@
 # aoc2018
 
-My [Advent of Code 2018](https://adventofcode.com/2018) solutions.
+My [Advent of Code 2018](https://adventofcode.com/2018) solutions. Days 1-3 are missing because I
+abandoned this calendar early when I was doing it originally.
 
 Usage:
 
@@ -20,4 +21,11 @@ Benchmarks use the real puzzle input, which is preloaded in memory.
 
 ```
 $ go test -bench=.
+goos: darwin
+goarch: amd64
+pkg: github.com/armsnyder/aoc2018
+Benchmark/Day_04/Part_1-16          2379            447879 ns/op          145463 B/op       1095 allocs/op
+Benchmark/Day_04/Part_2-16          2456            454367 ns/op          145461 B/op       1095 allocs/op
+PASS
+ok      github.com/armsnyder/aoc2018    2.410s
 ```
