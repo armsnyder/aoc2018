@@ -6,6 +6,8 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"sync"
+	"sync/atomic"
 )
 
 var _ = declareDay(6, func(part2 bool, inputReader io.Reader) interface{} {
@@ -18,33 +20,61 @@ var _ = declareDay(6, func(part2 bool, inputReader io.Reader) interface{} {
 func day06Part1(inputReader io.Reader) interface{} {
 	homeCoords := day06ParseCoords(inputReader)
 	box := day06GetBoundingBox(homeCoords)
+
+	mu := &sync.Mutex{}
 	coordAreas := make([]int, len(homeCoords))
 	infiniteAreaCoords := make([]bool, len(homeCoords))
-	var minHomeCoordIndices []int
 
-	for y := box.minY; y <= box.maxY; y++ {
-		for x := box.minX; x <= box.maxX; x++ {
-			minDistance := math.MaxInt32
+	wg := &sync.WaitGroup{}
 
-			for i, homeCoord := range homeCoords {
-				dist := homeCoord.distance(day06Coord{x, y})
-				if dist < minDistance {
-					minDistance = dist
-					minHomeCoordIndices = append(minHomeCoordIndices[:0], i)
-				} else if dist == minDistance {
-					minHomeCoordIndices = append(minHomeCoordIndices, i)
+	box.chunk(32, func(chunk day06BoundingBox) {
+		wg.Add(1)
+
+		go func() {
+			localCoordAreas := make([]int, len(homeCoords))
+			localInfiniteAreaCoords := make([]bool, len(homeCoords))
+			var minHomeCoordIndices []int
+
+			for y := chunk.minY; y <= chunk.maxY; y++ {
+				for x := chunk.minX; x <= chunk.maxX; x++ {
+					minDistance := math.MaxInt32
+
+					for i, homeCoord := range homeCoords {
+						dist := homeCoord.distance(day06Coord{x, y})
+						if dist < minDistance {
+							minDistance = dist
+							minHomeCoordIndices = append(minHomeCoordIndices[:0], i)
+						} else if dist == minDistance {
+							minHomeCoordIndices = append(minHomeCoordIndices, i)
+						}
+					}
+
+					if len(minHomeCoordIndices) == 1 {
+						if box.atBounds(day06Coord{x, y}) {
+							localInfiniteAreaCoords[minHomeCoordIndices[0]] = true
+						} else {
+							localCoordAreas[minHomeCoordIndices[0]]++
+						}
+					}
 				}
 			}
 
-			if len(minHomeCoordIndices) == 1 {
-				if box.atBounds(day06Coord{x, y}) {
-					infiniteAreaCoords[minHomeCoordIndices[0]] = true
-				} else {
-					coordAreas[minHomeCoordIndices[0]]++
+			mu.Lock()
+			for i, v := range localCoordAreas {
+				coordAreas[i] += v
+			}
+			for i, v := range localInfiniteAreaCoords {
+				if v {
+					infiniteAreaCoords[i] = true
 				}
 			}
-		}
-	}
+			mu.Unlock()
+
+			wg.Done()
+		}()
+	})
+
+	wg.Wait()
 
 	maxArea := math.MinInt32
 
@@ -64,26 +94,41 @@ func day06Part1(inputReader io.Reader) interface{} {
 func day06Part2(inputReader io.Reader, limit int) interface{} {
 	homeCoords := day06ParseCoords(inputReader)
 	box := day06GetBoundingBox(homeCoords)
-	area := 0
+	var area int32
+	wg := sync.WaitGroup{}
 
-	for y := box.minY; y <= box.maxY; y++ {
-		for x := box.minX; x <= box.maxX; x++ {
-			totalDistance := 0
+	box.chunk(32, func(chunk day06BoundingBox) {
+		wg.Add(1)
 
-			for _, homeCoord := range homeCoords {
-				totalDistance += homeCoord.distance(day06Coord{x, y})
-				if totalDistance >= limit {
-					break
+		go func() {
+			var localArea int32
+
+			for y := chunk.minY; y <= chunk.maxY; y++ {
+				for x := chunk.minX; x <= chunk.maxX; x++ {
+					totalDistance := 0
+
+					for _, homeCoord := range homeCoords {
+						totalDistance += homeCoord.distance(day06Coord{x, y})
+						if totalDistance >= limit {
+							break
+						}
+					}
+
+					if totalDistance < limit {
+						localArea++
+					}
 				}
 			}
 
-			if totalDistance < limit {
-				area++
-			}
-		}
-	}
+			atomic.AddInt32(&area, localArea)
 
-	return area
+			wg.Done()
+		}()
+	})
+
+	wg.Wait()
+
+	return int(area)
 }
 
 func day06ParseCoords(inputReader io.Reader) (coords []day06Coord) {
@@ -147,4 +192,22 @@ type day06BoundingBox struct{ minX, minY, maxX, maxY int }
 
 func (b day06BoundingBox) atBounds(coord day06Coord) bool {
 	return coord.x == b.minX || coord.y == b.minY || coord.x == b.maxX || coord.y == b.maxY
+}
+
+func (b day06BoundingBox) chunk(size int, fn func(chunk day06BoundingBox)) {
+	for minX := b.minX; minX <= b.maxX; minX += size {
+		maxX := minX + size - 1
+		if maxX > b.maxX {
+			maxX = b.maxX
+		}
+
+		for minY := b.minY; minY <= b.maxY; minY += size {
+			maxY := minY + size - 1
+			if maxY > b.maxY {
+				maxY = b.maxY
+			}
+
+			fn(day06BoundingBox{minX, minY, maxX, maxY})
+		}
+	}
 }
