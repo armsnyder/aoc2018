@@ -8,7 +8,7 @@ import (
 
 var _ = declareDay(7, func(part2 bool, inputReader io.Reader) interface{} {
 	if part2 {
-		return day07Part2(inputReader)
+		return day07Part2(inputReader, 5, 60)
 	}
 	return day07Part1(inputReader)
 })
@@ -16,10 +16,13 @@ var _ = declareDay(7, func(part2 bool, inputReader io.Reader) interface{} {
 func day07Part1(inputReader io.Reader) interface{} {
 	dag := day07ParseDAG(inputReader)
 	queue := make(day07SortedBytes, 0)
+
 	for _, leaf := range dag.leaves() {
 		queue.add(leaf)
 	}
+
 	var result []byte
+
 	for len(queue) > 0 {
 		value := queue.popSmallest()
 		result = append(result, value)
@@ -28,11 +31,39 @@ func day07Part1(inputReader io.Reader) interface{} {
 			queue.add(leaf)
 		}
 	}
+
 	return string(result)
 }
 
-func day07Part2(inputReader io.Reader) interface{} {
-	panic("no solution")
+func day07Part2(inputReader io.Reader, numWorkers, durationOffset int) interface{} {
+	dag := day07ParseDAG(inputReader)
+	queue := make(day07SortedBytes, 0)
+
+	for _, leaf := range dag.leaves() {
+		queue.add(leaf)
+	}
+
+	t := 0
+	var timeline day07Timeline
+
+	for len(timeline) > 0 || len(queue) > 0 {
+		for numWorkers > 0 && len(queue) > 0 {
+			job := queue.popSmallest()
+			completionTime := t + durationOffset + int(job-'A'+1)
+			timeline.insert(completionTime, job)
+			numWorkers--
+		}
+
+		t = timeline[0].time
+		newLeaves := dag.removeLeaf(timeline[0].value)
+		for _, leaf := range newLeaves {
+			queue.add(leaf)
+		}
+		numWorkers++
+		timeline = timeline[1:]
+	}
+
+	return t
 }
 
 func day07ParseDAG(inputReader io.Reader) *day07DAG {
@@ -160,4 +191,25 @@ func (d *day07DAG) leaves() (leaves []byte) {
 	}
 
 	return leaves
+}
+
+type day07TimelineItem struct {
+	time  int
+	value byte
+}
+
+type day07Timeline []day07TimelineItem
+
+func (q *day07Timeline) insert(time int, value byte) {
+	insertIndex := sort.Search(len(*q), func(i int) bool {
+		return (*q)[i].time > time
+	})
+
+	if insertIndex == len(*q) {
+		*q = append(*q, day07TimelineItem{time: time, value: value})
+	} else {
+		*q = append(*q, day07TimelineItem{})
+		copy((*q)[insertIndex+1:], (*q)[insertIndex:])
+		(*q)[insertIndex] = day07TimelineItem{time: time, value: value}
+	}
 }

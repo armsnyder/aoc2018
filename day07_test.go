@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -24,15 +25,20 @@ Step F must be finished before step E can begin.
 }
 
 func TestDay07Part2(t *testing.T) {
-	runDayTests(t, 7, []dayTest{
-		//		{
-		//			part2: true,
-		//			input: `
-		//
-		//`,
-		//			want: nil,
-		//		},
-	})
+	input := strings.NewReader(`
+Step C must be finished before step A can begin.
+Step C must be finished before step F can begin.
+Step A must be finished before step B can begin.
+Step A must be finished before step D can begin.
+Step B must be finished before step E can begin.
+Step D must be finished before step E can begin.
+Step F must be finished before step E can begin.
+`)
+	got := day07Part2(input, 2, 0)
+	want := 15
+	if got != want {
+		t.Errorf("got %d; wanted %d", got, want)
+	}
 }
 
 func Test_day07SortedBytes(t *testing.T) {
@@ -89,11 +95,11 @@ func Test_day07DAG(t *testing.T) {
 			}
 			gotLeaves := dag.leaves()
 			if !reflect.DeepEqual(gotLeaves, tt.wantLeaves) {
-				t.Errorf("wanted initial leaves: %v; got: %v", tt.wantLeaves, gotLeaves)
+				t.Errorf("wanted initial leaves: %value; got: %value", tt.wantLeaves, gotLeaves)
 			}
 			gotNewLeaves := dag.removeLeaf(tt.removeVertex)
 			if !reflect.DeepEqual(gotNewLeaves, tt.wantNewLeaves) {
-				t.Errorf("wanted new leaves: %v; got: %v", tt.wantNewLeaves, gotNewLeaves)
+				t.Errorf("wanted new leaves: %value; got: %value", tt.wantNewLeaves, gotNewLeaves)
 			}
 		})
 	}

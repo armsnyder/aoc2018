@@ -24,12 +24,14 @@ $ go test -bench=.
 goos: darwin
 goarch: amd64
 pkg: github.com/armsnyder/aoc2018
-Benchmark/Day_04/Part_1-16          2391            425998 ns/op          145462 B/op       1095 allocs/op
-Benchmark/Day_04/Part_2-16          2788            421669 ns/op          145462 B/op       1095 allocs/op
-Benchmark/Day_05/Part_1-16          5922            202875 ns/op          177536 B/op         25 allocs/op
-Benchmark/Day_05/Part_2-16           733           1585667 ns/op          900426 B/op        283 allocs/op
-Benchmark/Day_06/Part_1-16           628           1980231 ns/op           59961 B/op        536 allocs/op
-Benchmark/Day_06/Part_2-16          1027           1150500 ns/op            8169 B/op        111 allocs/op
+Benchmark/Day_04/Part_1-16          2385            425543 ns/op          145461 B/op       1095 allocs/op
+Benchmark/Day_04/Part_2-16          2698            426258 ns/op          145462 B/op       1095 allocs/op
+Benchmark/Day_05/Part_1-16          5826            203503 ns/op          177536 B/op         25 allocs/op
+Benchmark/Day_05/Part_2-16           720           1570948 ns/op          900835 B/op        284 allocs/op
+Benchmark/Day_06/Part_1-16           649           1973529 ns/op           59961 B/op        536 allocs/op
+Benchmark/Day_06/Part_2-16           994           1143134 ns/op            8160 B/op        111 allocs/op
+Benchmark/Day_07/Part_1-16         29248             39906 ns/op            8145 B/op        140 allocs/op
+Benchmark/Day_07/Part_2-16         29246             40674 ns/op            8736 B/op        151 allocs/op
 PASS
-ok      github.com/armsnyder/aoc2018    8.705s
+ok      github.com/armsnyder/aoc2018    11.888s
 ```
