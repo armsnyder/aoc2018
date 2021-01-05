@@ -1,10 +1,10 @@
 package main
 
 import (
-	"bufio"
-	"bytes"
 	"io"
+	"io/ioutil"
 	"strconv"
+	"strings"
 )
 
 var _ = declareDay(8, func(part2 bool, inputReader io.Reader) interface{} {
@@ -15,19 +15,25 @@ var _ = declareDay(8, func(part2 bool, inputReader io.Reader) interface{} {
 })
 
 func day08Part1(inputReader io.Reader) interface{} {
+	rawInput, _ := ioutil.ReadAll(inputReader)
+	inputFields := strings.Fields(string(rawInput))
+
 	var stack day08Stack
 	var state day08State
-	total := 0
 
-	day08ScanNumbers(inputReader, func(v int) {
+	metadataTotal := 0
+
+	for _, field := range inputFields {
+		inputValue, _ := strconv.Atoi(field)
+
 		switch state {
 		case day08ChildHeader:
-			stack.push(day08Node{children: v})
+			stack.push(day08Node{children: inputValue})
 			state = day08MetadataHeader
 
 		case day08MetadataHeader:
 			node := stack.pop()
-			node.metadata = v
+			node.metadata = inputValue
 			if node.children == 0 {
 				state = day08Metadata
 			} else {
@@ -37,7 +43,7 @@ func day08Part1(inputReader io.Reader) interface{} {
 			stack.push(node)
 
 		case day08Metadata:
-			total += v
+			metadataTotal += inputValue
 			node := stack.pop()
 			node.metadata--
 			if node.metadata > 0 {
@@ -49,38 +55,13 @@ func day08Part1(inputReader io.Reader) interface{} {
 				state = day08ChildHeader
 			}
 		}
-	})
+	}
 
-	return total
+	return metadataTotal
 }
 
 func day08Part2(inputReader io.Reader) interface{} {
 	panic("no solution")
-}
-
-func day08ScanNumbers(inputReader io.Reader, fn func(v int)) {
-	scanner := bufio.NewScanner(inputReader)
-
-	scanner.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {
-		if atEOF && len(data) == 0 {
-			return 0, nil, nil
-		}
-
-		if i := bytes.IndexAny(data, " \n"); i >= 0 {
-			return i + 1, data[0:i], nil
-		}
-
-		if atEOF {
-			return len(data), data, nil
-		}
-
-		return 0, nil, nil
-	})
-
-	for scanner.Scan() {
-		v, _ := strconv.Atoi(scanner.Text())
-		fn(v)
-	}
 }
 
 type day08State int
