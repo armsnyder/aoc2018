@@ -15,86 +15,82 @@ var _ = declareDay(8, func(part2 bool, inputReader io.Reader) interface{} {
 })
 
 func day08Part1(inputReader io.Reader) interface{} {
-	rawInput, _ := ioutil.ReadAll(inputReader)
-	inputFields := strings.Fields(string(rawInput))
-
-	var stack day08Stack
-	var state day08State
-
-	metadataTotal := 0
-
-	for _, field := range inputFields {
-		inputValue, _ := strconv.Atoi(field)
-
-		switch state {
-		case day08ChildHeader:
-			stack.push(day08Node{children: inputValue})
-			state = day08MetadataHeader
-
-		case day08MetadataHeader:
-			node := stack.pop()
-			node.metadata = inputValue
-			if node.children == 0 {
-				state = day08Metadata
-			} else {
-				node.children--
-				state = day08ChildHeader
+	return day08ParseTree(inputReader).
+		postOrderReduce(func(node day08Node) (sum int) {
+			for _, metadata := range node.metadata {
+				sum += metadata
 			}
-			stack.push(node)
-
-		case day08Metadata:
-			metadataTotal += inputValue
-			node := stack.pop()
-			node.metadata--
-			if node.metadata > 0 {
-				stack.push(node)
-			} else if stack.peek().children > 0 {
-				node = stack.pop()
-				node.children--
-				stack.push(node)
-				state = day08ChildHeader
+			for _, child := range node.children {
+				sum += child
 			}
-		}
-	}
-
-	return metadataTotal
+			return sum
+		})
 }
 
 func day08Part2(inputReader io.Reader) interface{} {
-	panic("no solution")
+	return day08ParseTree(inputReader).
+		postOrderReduce(func(node day08Node) (sum int) {
+			for _, metadata := range node.metadata {
+				if len(node.children) == 0 {
+					sum += metadata
+				} else if metadata-1 < len(node.children) {
+					sum += node.children[metadata-1]
+				}
+			}
+			return sum
+		})
 }
 
-type day08State int
+func day08ParseTree(inputReader io.Reader) (tree day08Tree) {
+	rawInput, _ := ioutil.ReadAll(inputReader)
+	inputFields := strings.Fields(string(rawInput))
 
-const (
-	day08ChildHeader day08State = iota
-	day08MetadataHeader
-	day08Metadata
-)
+	tree = make(day08Tree, len(inputFields))
+
+	for i, field := range inputFields {
+		tree[i], _ = strconv.Atoi(field)
+	}
+
+	return tree
+}
+
+type day08Tree []int
+
+func (t day08Tree) postOrderReduce(fn func(node day08Node) int) int {
+	var stack []day08Node
+	var i int
+
+	for {
+		node := day08Node{
+			children: make([]int, 0, t[i]),
+			metadata: make([]int, 0, t[i+1]),
+		}
+
+		i += 2
+
+		for len(node.children) == cap(node.children) {
+			metadataEnd := i + cap(node.metadata)
+
+			for ; i < metadataEnd; i++ {
+				node.metadata = append(node.metadata, t[i])
+			}
+
+			result := fn(node)
+
+			if len(stack) == 0 {
+				return result
+			}
+
+			node = stack[len(stack)-1]
+			stack = stack[:len(stack)-1]
+			node.children = append(node.children, result)
+		}
+
+		stack = append(stack, node)
+	}
+}
 
 type day08Node struct {
-	children int
-	metadata int
-}
-
-type day08Stack []day08Node
-
-func (s *day08Stack) push(node day08Node) {
-	*s = append(*s, node)
-}
-
-func (s *day08Stack) pop() day08Node {
-	if len(*s) == 0 {
-		return day08Node{}
-	}
-	node := (*s)[len(*s)-1]
-	*s = (*s)[:len(*s)-1]
-	return node
-}
-
-func (s *day08Stack) peek() day08Node {
-	if len(*s) == 0 {
-		return day08Node{}
-	}
-	return (*s)[len(*s)-1]
+	children []int
+	metadata []int
 }
