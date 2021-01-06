@@ -40,7 +40,7 @@ func day11Part2(inputReader io.Reader) interface{} {
 
 type day11Grid struct {
 	serialNumber int
-	power        [300][300]int8
+	power        [301][301]int
 }
 
 func (g *day11Grid) loadSerialNumber(inputReader io.Reader) {
@@ -49,10 +49,10 @@ func (g *day11Grid) loadSerialNumber(inputReader io.Reader) {
 }
 
 func (g *day11Grid) calculatePowerLevels() {
-	for x := 0; x < 300; x++ {
-		rackID := x + 11
-		for y := 0; y < 300; y++ {
-			g.power[y][x] = int8(((rackID*(y+1)+g.serialNumber)*rackID/100)%10 - 5)
+	for x := 1; x <= 300; x++ {
+		rackID := x + 10
+		for y := 1; y <= 300; y++ {
+			g.power[y][x] = ((rackID*y+g.serialNumber)*rackID/100)%10 - 5 + g.power[y][x-1] + g.power[y-1][x] - g.power[y-1][x-1]
 		}
 	}
 }
@@ -60,18 +60,11 @@ func (g *day11Grid) calculatePowerLevels() {
 func (g *day11Grid) locateHighestPowerSquare(size int) (maxPowerX, maxPowerY, maxPower int) {
 	maxPower = math.MinInt32
 
-	for x1 := 0; x1 <= 300-size; x1++ {
-		for y1 := 0; y1 <= 300-size; y1++ {
-			power := 0
-
-			for x2 := x1; x2 < x1+size; x2++ {
-				for y2 := y1; y2 < y1+size; y2++ {
-					power += int(g.power[y2][x2])
-				}
-			}
-
+	for x := 0; x <= 300-size; x++ {
+		for y := 0; y <= 300-size; y++ {
+			power := g.power[y][x] + g.power[y+size][x+size] - g.power[y+size][x] - g.power[y][x+size]
 			if power > maxPower {
-				maxPowerX, maxPowerY, maxPower = x1, y1, power
+				maxPowerX, maxPowerY, maxPower = x, y, power
 			}
 		}
 	}
