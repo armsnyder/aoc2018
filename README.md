@@ -24,18 +24,20 @@ $ go test -bench=.
 goos: darwin
 goarch: amd64
 pkg: github.com/armsnyder/aoc2018
-Benchmark/Day_04/Part_1-16          2326            453995 ns/op          145462 B/op       1095 allocs/op
-Benchmark/Day_04/Part_2-16          2443            457525 ns/op          145463 B/op       1095 allocs/op
-Benchmark/Day_05/Part_1-16          5296            222592 ns/op          177536 B/op         25 allocs/op
-Benchmark/Day_05/Part_2-16           745           1637821 ns/op          900670 B/op        284 allocs/op
-Benchmark/Day_06/Part_1-16           595           2027423 ns/op           59952 B/op        536 allocs/op
-Benchmark/Day_06/Part_2-16          1018           1177671 ns/op            8166 B/op        111 allocs/op
-Benchmark/Day_07/Part_1-16         27547             42569 ns/op            8144 B/op        140 allocs/op
-Benchmark/Day_07/Part_2-16         27577             43574 ns/op            8736 B/op        151 allocs/op
-Benchmark/Day_08/Part_1-16          2372            456757 ns/op          741626 B/op       3031 allocs/op
-Benchmark/Day_08/Part_2-16          2271            501312 ns/op          741626 B/op       3031 allocs/op
-Benchmark/Day_09/Part_1-16           354           3395335 ns/op         2199583 B/op      68548 allocs/op
-Benchmark/Day_09/Part_2-16             3         375546758 ns/op        219338976 B/op   6854154 allocs/op
+Benchmark/Day_04/Part_1-16          2746            462724 ns/op          145463 B/op       1095 allocs/op
+Benchmark/Day_04/Part_2-16          2648            435993 ns/op          145460 B/op       1095 allocs/op
+Benchmark/Day_05/Part_1-16          5556            210476 ns/op          177536 B/op         25 allocs/op
+Benchmark/Day_05/Part_2-16           692           1549092 ns/op          900047 B/op        284 allocs/op
+Benchmark/Day_06/Part_1-16           596           2038004 ns/op           59987 B/op        536 allocs/op
+Benchmark/Day_06/Part_2-16           954           1154022 ns/op            8164 B/op        111 allocs/op
+Benchmark/Day_07/Part_1-16         28242             42553 ns/op            8146 B/op        141 allocs/op
+Benchmark/Day_07/Part_2-16         28450             41781 ns/op            8737 B/op        151 allocs/op
+Benchmark/Day_08/Part_1-16          2320            452959 ns/op          741626 B/op       3031 allocs/op
+Benchmark/Day_08/Part_2-16          2467            492304 ns/op          741626 B/op       3031 allocs/op
+Benchmark/Day_09/Part_1-16           356           3250510 ns/op         2199582 B/op      68548 allocs/op
+Benchmark/Day_09/Part_2-16             3         361848361 ns/op        219338976 B/op   6854154 allocs/op
+Benchmark/Day_10/Part_1-16          9565            111899 ns/op           72416 B/op        632 allocs/op
+Benchmark/Day_10/Part_2-16          9871            111663 ns/op           70888 B/op        620 allocs/op
 PASS
-ok      github.com/armsnyder/aoc2018    17.500s
+ok      github.com/armsnyder/aoc2018    20.539s
 ```
