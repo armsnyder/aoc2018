@@ -24,22 +24,23 @@ $ go test -bench=.
 goos: darwin
 goarch: amd64
 pkg: github.com/armsnyder/aoc2018
-Benchmark/Day_04/Part_1-16          2649            435321 ns/op          145466 B/op       1095 allocs/op
-Benchmark/Day_04/Part_2-16          2464            433433 ns/op          145460 B/op       1095 allocs/op
-Benchmark/Day_05/Part_1-16          5434            208460 ns/op          177536 B/op         25 allocs/op
-Benchmark/Day_05/Part_2-16           708           1640200 ns/op          901055 B/op        284 allocs/op
-Benchmark/Day_06/Part_1-16           645           1934420 ns/op           59969 B/op        536 allocs/op
-Benchmark/Day_06/Part_2-16          1136           1145500 ns/op            8165 B/op        111 allocs/op
-Benchmark/Day_07/Part_1-16         28768             41358 ns/op            8145 B/op        140 allocs/op
-Benchmark/Day_07/Part_2-16         28618             41857 ns/op            8737 B/op        151 allocs/op
-Benchmark/Day_08/Part_1-16          2617            453896 ns/op          741626 B/op       3031 allocs/op
-Benchmark/Day_08/Part_2-16          2478            496348 ns/op          741626 B/op       3031 allocs/op
-Benchmark/Day_09/Part_1-16           352           3276305 ns/op         2199583 B/op      68548 allocs/op
-Benchmark/Day_09/Part_2-16             3         347363015 ns/op        219338978 B/op   6854154 allocs/op
-Benchmark/Day_10/Part_1-16          9976            111311 ns/op           72416 B/op        632 allocs/op
-Benchmark/Day_10/Part_2-16         10000            110036 ns/op           70888 B/op        620 allocs/op
-Benchmark/Day_11/Part_1-16          2379            520234 ns/op            2080 B/op          5 allocs/op
-Benchmark/Day_11/Part_2-16            48          23883337 ns/op            2080 B/op          6 allocs/op
-PASS
-ok      github.com/armsnyder/aoc2018    22.368s
+cpu: Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
+Benchmark/Day_04/Part_1-16          2824            418264 ns/op          145455 B/op       1095 allocs/op
+Benchmark/Day_04/Part_2-16          2877            424348 ns/op          145451 B/op       1095 allocs/op
+Benchmark/Day_05/Part_1-16          5355            215655 ns/op          258944 B/op         34 allocs/op
+Benchmark/Day_05/Part_2-16           754           1628480 ns/op          982025 B/op        293 allocs/op
+Benchmark/Day_06/Part_1-16           619           2044924 ns/op           59966 B/op        536 allocs/op
+Benchmark/Day_06/Part_2-16          1054           1153188 ns/op            8162 B/op        111 allocs/op
+Benchmark/Day_07/Part_1-16         28878             40929 ns/op            7751 B/op        140 allocs/op
+Benchmark/Day_07/Part_2-16         29137             42224 ns/op            8342 B/op        151 allocs/op
+Benchmark/Day_08/Part_1-16          2511            452615 ns/op          763426 B/op       3039 allocs/op
+Benchmark/Day_08/Part_2-16          2401            494968 ns/op          763426 B/op       3039 allocs/op
+Benchmark/Day_09/Part_1-16           504           2366983 ns/op         1649696 B/op      68547 allocs/op
+Benchmark/Day_09/Part_2-16             3         377833151 ns/op        164504248 B/op   6854153 allocs/op
+Benchmark/Day_10/Part_1-16          9464            113338 ns/op           72416 B/op        632 allocs/op
+Benchmark/Day_10/Part_2-16         10000            109330 ns/op           70888 B/op        620 allocs/op
+Benchmark/Day_11/Part_1-16          2342            504162 ns/op             544 B/op          4 allocs/op
+Benchmark/Day_11/Part_2-16            51          24198209 ns/op             544 B/op          5 allocs/op
+Benchmark/Day_12/Part_1-16         15339             76401 ns/op           10665 B/op        178 allocs/op
+Benchmark/Day_12/Part_2-16          2535            483413 ns/op           41778 B/op        714 allocs/op
 ```
